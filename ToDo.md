@@ -6,4 +6,4 @@
 - Dateien und Projekt umbenennen
 - Verbose mode
 - Error handling
-- git
+- ~~~git~~~
