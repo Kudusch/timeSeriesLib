@@ -20,4 +20,4 @@ The `options.txt` must contain the following parameters:
 - Variable: The variable to convert
 - Werte: The expected values of the variable
 
-For an example `options.txt` see (Eingabe.txt)[Eingabe.txt]
+For an example `options.txt` see [Eingabe.txt](Eingabe.txt)
