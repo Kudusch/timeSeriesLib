@@ -4,7 +4,7 @@ This tool converts case based .csv data to data more fitting for time series ana
 
 ## Usage
 
-`python controler.py [YOUR DATA].csv [OPTIONS].txt`
+`python controler.py [OPTIONS].txt [YOUR DATA].csv`
 
 The data must be a csv-file, with either `,`or `;` as delimiter.
 
