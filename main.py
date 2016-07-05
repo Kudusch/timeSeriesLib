@@ -3,7 +3,7 @@
 from utilities import *
 import csv
 import datetime
-import os.path
+import os
 
 def generateTimeSeries(start, end, var, values, delimiter, maxSeconds, data):
     reader = csv.reader(open(data, 'r', ), delimiter=delimiter)

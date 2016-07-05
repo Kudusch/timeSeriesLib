@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import string
+import random
 
 def stampToSeconds(stamp):
     stamp = stamp.split(':')
@@ -23,3 +24,7 @@ def flatten(l, values):
     for key in sorted(d.iterkeys()):
          out.append(d[key])
     return out
+
+
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
