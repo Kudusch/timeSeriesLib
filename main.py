@@ -5,6 +5,7 @@ import csv
 import datetime
 import os
 
+# generates csv and returns file names
 def generateTimeSeries(start, end, var, values, delimiter, maxSeconds, data):
     reader = csv.reader(open(data, 'r', ), delimiter=delimiter)
     header = reader.next();

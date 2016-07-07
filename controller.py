@@ -7,24 +7,28 @@ import datetime
 import csv
 import timeit
 
+# output timer
 startTime = timeit.default_timer()
 
+# read options
 options = open(sys.argv[1], 'r').read()
 data = sys.argv[2]
 start = re.findall(re.compile(ur'^Start: (.*)$', re.MULTILINE) , options)[0]
 end = re.findall(re.compile(ur'^Ende: (.*)$', re.MULTILINE) , options)[0]
 delimiter = re.findall(re.compile(ur'^Trennungszeichen: (.*)$', re.MULTILINE) , options)[0]
 maxSeconds = int(re.findall(re.compile(ur'^Dauer: (.*)$', re.MULTILINE), options)[0])
-
 var = re.findall(re.compile(ur'^Variable: (.*)$', re.MULTILINE) , options)
 values = re.findall(re.compile(ur'^Werte: (.*)$', re.MULTILINE) , options)
 
+# run for every var/values pair, array with file names
 files = []
 for option in var:
     files.append(generateTimeSeries(start, end, option, values[var.index(option)], delimiter, maxSeconds, data))
 random = id_generator()
+# after run, delete temp and columns files
 for f in files:
     current = csv.reader(open(f, 'r', ), delimiter=delimiter)
+    # on first var/values pair merge with columns, then with temp.csv
     if files.index(f) > 0:
         writer = csv.writer(open(random+'temp.csv', 'w'), delimiter=delimiter)
         reader = csv.reader(open(random+'merged.csv', 'r'), delimiter=delimiter)
