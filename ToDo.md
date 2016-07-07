@@ -1,6 +1,7 @@
 # To do: ZeitreihenLib.py
 
-- Code aufräumen und kommentieren
+- ~~Comments~~
+- ~~Clean up~~
 - Fall: Angegebene Dauer unterschreitet die Länge eines Falls
 - Andere CSV delimiter testen
 - Dateien und Projekt umbenennen?
