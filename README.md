@@ -4,11 +4,11 @@ This tool converts case based .csv data to data more fitting for time series ana
 
 ## Usage
 
-`python controler.py [OPTIONS].txt [YOUR DATA].csv`
+`python timeSeries/timeSeries.py [OPTIONS] [YOUR DATA].csv`
 
 The data must be a csv-file, with either `,`or `;` as delimiter.
 
-The `options.txt` must contain the following parameters:
+The options file must contain the following parameters:
 
 - Start: The variable containing the beginning of the case
 - Ende: The variable containing the end of the case
@@ -20,4 +20,4 @@ The `options.txt` must contain the following parameters:
 - Variable: The variable to convert
 - Werte: The expected values of the variable
 
-For an example `options.txt` see [Example options.txt](Example options.txt)
+For an example options file see [Example options.txt](Example options.txt)
