@@ -20,4 +20,4 @@ The options file must contain the following parameters:
 - Variable: The variable to convert
 - Values: The expected values of the variable
 
-For an example options file see [Example options.txt](Example options.txt)
+For an example options file see [Example options.txt](/example/Example options.txt)
