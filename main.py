@@ -20,7 +20,10 @@ def generateTimeSeries(start, end, var, values, delimiter, maxSeconds, data):
     for row in reader:
         if (row[varIndex] in values):
             for second in range(stampToSeconds(row[startIndex]), stampToSeconds(row[endIndex]) + 1):
-                timeSeries[second].append(row[varIndex])
+                try:
+                    timeSeries[second].append(row[varIndex])
+                except:
+                    pass
 
     now = datetime.datetime.today()
     fileName = var+"_"+now.strftime("%Y-%m-%d %H.%M.%S.csv")
