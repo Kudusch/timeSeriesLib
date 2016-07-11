@@ -4,10 +4,17 @@ from utilities import *
 import csv
 import datetime
 import os
+import sys
 
 # generates csv and returns file names
 def generateTimeSeries(start, end, var, values, delimiter, maxSeconds, data):
-    reader = csv.reader(open(data, 'r', ), delimiter=delimiter)
+    f = open(data, 'r', )
+    sniffer = csv.Sniffer()
+    dialect = sniffer.sniff(f.read())
+    if not (dialect.delimiter == delimiter):
+        sys.exit('Error: Data file uses different delimiter than the one set in options.')
+    f.seek(0)
+    reader = csv.reader(f, delimiter=delimiter)
     header = reader.next();
 
     values = values.split(',')
