@@ -33,11 +33,11 @@ def validateOptions(options):
     try:
         raw = open(options, 'r').read()
         start = re.findall(re.compile(ur'^Start: (\S*)$', re.MULTILINE) , raw)[0]
-        end = re.findall(re.compile(ur'^Ende: (\S*)$', re.MULTILINE) , raw)[0]
-        delimiter = re.findall(re.compile(ur'^Trennungszeichen: (\S*)$', re.MULTILINE) , raw)[0]
-        maxSeconds = int(re.findall(re.compile(ur'^Dauer: (\S*)$', re.MULTILINE), raw)[0])
+        end = re.findall(re.compile(ur'^End: (\S*)$', re.MULTILINE) , raw)[0]
+        delimiter = re.findall(re.compile(ur'^Delimiter: (\S*)$', re.MULTILINE) , raw)[0]
+        maxSeconds = int(re.findall(re.compile(ur'^Duration: (\S*)$', re.MULTILINE), raw)[0])
         var = re.findall(re.compile(ur'^Variable: (\S*)$', re.MULTILINE) , raw)
-        values = re.findall(re.compile(ur'^Werte: (\S*)$', re.MULTILINE) , raw)
+        values = re.findall(re.compile(ur'^Values: (\S*)$', re.MULTILINE) , raw)
         for x in [start, end, delimiter, maxSeconds, var, values]:
             if x == "" or x == [] :
                 return False

@@ -37,7 +37,7 @@ def generateTimeSeries(start, end, var, values, delimiter, maxSeconds, data):
     writer = csv.writer(open(fileName, 'w'), delimiter=delimiter)
     columns = csv.writer(open('columns.csv', 'w'), delimiter=delimiter) if not os.path.isfile('columns.csv') else False
     try:
-        columns.writerow(["Sekunden", "Zeitstempel"])
+        columns.writerow(["Seconds", "Timestamp"])
     except:
         pass
     header = []
