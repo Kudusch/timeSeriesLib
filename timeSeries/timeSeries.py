@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from main import *
+from core import *
 import datetime
 import csv
 import timeit
