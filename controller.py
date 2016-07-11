@@ -2,7 +2,6 @@
 
 from main import *
 import sys
-import re
 import datetime
 import csv
 import timeit
@@ -10,15 +9,26 @@ import timeit
 # output timer
 startTime = timeit.default_timer()
 
-# read options
-options = open(sys.argv[1], 'r').read()
-data = sys.argv[2]
-start = re.findall(re.compile(ur'^Start: (.*)$', re.MULTILINE) , options)[0]
-end = re.findall(re.compile(ur'^Ende: (.*)$', re.MULTILINE) , options)[0]
-delimiter = re.findall(re.compile(ur'^Trennungszeichen: (.*)$', re.MULTILINE) , options)[0]
-maxSeconds = int(re.findall(re.compile(ur'^Dauer: (.*)$', re.MULTILINE), options)[0])
-var = re.findall(re.compile(ur'^Variable: (.*)$', re.MULTILINE) , options)
-values = re.findall(re.compile(ur'^Werte: (.*)$', re.MULTILINE) , options)
+# read options, handle errors
+try:
+    options = validateOptions(sys.argv[1])
+    if (options == False):
+        sys.exit('Error: Options are in wrong format.')   
+except:
+    sys.exit('Error: Options not found.')
+try:
+    data = sys.argv[2]
+    if not (os.path.isfile(data)):
+        sys.exit('Error: No data found.')    
+except:
+    sys.exit('Error: Data not found.')
+
+start = options[0]
+end = options[1]
+delimiter = options[2]
+maxSeconds = options[3]
+var = options[4]
+values = options[5]
 
 # run for every var/values pair, array with file names
 files = []
