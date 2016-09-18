@@ -7,3 +7,4 @@
 - ~~Verbose mode~~
 - ~~Error handling~~
 - ~~git~~
+- Tests on windows, Linux other Macs
