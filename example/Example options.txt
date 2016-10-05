@@ -2,6 +2,7 @@ Start: V104_start
 End: V105_end
 Delimiter: ;
 Duration: 5600
+Cumulate to: None
 
 Variable: V202_bezug
 Values: 10,11,12,13,21,22,31,32,41,42,52,61,62,71,72,99

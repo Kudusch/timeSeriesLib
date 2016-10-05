@@ -3,6 +3,7 @@
 import string
 import random
 import re
+import csv
 
 def stampToSeconds(stamp):
     stamp = stamp.split(':')
@@ -29,18 +30,65 @@ def flatten(l, values):
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
     
+def cumulateTo(unit, data):
+    with open(data, 'r') as f:
+        sniffer = csv.Sniffer()
+        dialect = sniffer.sniff(f.read())
+        delimiter = dialect.delimiter
+        f.seek(0)
+        reader = csv.reader(f, delimiter=delimiter)
+        header = reader.next();
+        readerLength = sum(1 for row in reader)
+    with open(data, 'r') as f:
+        sniffer = csv.Sniffer()
+        dialect = sniffer.sniff(f.read())
+        delimiter = dialect.delimiter
+        f.seek(0)
+        reader = csv.reader(f, delimiter=delimiter)
+        header = reader.next();
+        unitCumulation = [0] * len(header)
+        cumulated = []
+        random = id_generator()
+        for row in reader:
+            for n in range(0,2):
+                row.pop(0)
+            try:
+                unitCumulation = [int(x) + int(y) for x, y in zip(unitCumulation, row)]
+            except:
+                pass
+            line = reader.line_num - 1
+            if line % unit == 0:
+                cumulated.append([line / unit] + unitCumulation)
+                unitCumulation = [0] * len(header)
+            elif line == readerLength:
+                cumulated.append([(line / unit) + 1] + unitCumulation)
+        with open(random+'_cumulated.csv', 'w') as write:
+            writer = csv.writer(write, delimiter=delimiter)
+            for n in range(0,2):
+                header.pop(0)
+            header = ["Cumulation Unit:"+str(unit)] + header
+            writer.writerow(header)
+            writer.writerows(cumulated)
+        return random+'_cumulated.csv'
+    
 def validateOptions(options):
     try:
-        raw = open(options, 'r').read()
-        start = re.findall(re.compile(ur'^Start: (\S*)$', re.MULTILINE) , raw)[0]
-        end = re.findall(re.compile(ur'^End: (\S*)$', re.MULTILINE) , raw)[0]
-        delimiter = re.findall(re.compile(ur'^Delimiter: (\S*)$', re.MULTILINE) , raw)[0]
-        maxSeconds = int(re.findall(re.compile(ur'^Duration: (\S*)$', re.MULTILINE), raw)[0])
-        var = re.findall(re.compile(ur'^Variable: (\S*)$', re.MULTILINE) , raw)
-        values = re.findall(re.compile(ur'^Values: (\S*)$', re.MULTILINE) , raw)
-        for x in [start, end, delimiter, maxSeconds, var, values]:
-            if x == "" or x == [] :
-                return False
-        return [start, end, delimiter, maxSeconds, var, values]
+        with open(options, 'r') as raw:
+            raw = raw.read()
+            start = re.findall(re.compile(ur'^Start: (\S*)$', re.MULTILINE) , raw)[0]
+            end = re.findall(re.compile(ur'^End: (\S*)$', re.MULTILINE) , raw)[0]
+            delimiter = re.findall(re.compile(ur'^Delimiter: (\S*)$', re.MULTILINE) , raw)[0]
+            maxSeconds = int(re.findall(re.compile(ur'^Duration: (\S*)$', re.MULTILINE), raw)[0])
+            cumulation = re.findall(re.compile(ur'^Cumulate to: (\S*)$', re.MULTILINE) , raw)[0]
+            if cumulation == "None":
+               cumulation = 1
+            else:
+               cumulation = int(cumulation)
+            var = re.findall(re.compile(ur'^Variable: (\S*)$', re.MULTILINE) , raw)
+            values = re.findall(re.compile(ur'^Values: (\S*)$', re.MULTILINE) , raw)
+            for x in [start, end, delimiter, maxSeconds, cumulation, var, values]:
+                if x == "" or x == [] :
+                    return False
+            return [start, end, delimiter, maxSeconds, cumulation, var, values]
     except:
         return False

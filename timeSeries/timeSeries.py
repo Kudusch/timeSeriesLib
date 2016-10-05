@@ -26,13 +26,14 @@ start = options[0]
 end = options[1]
 delimiter = options[2]
 maxSeconds = options[3]
-var = options[4]
-values = options[5]
+cumulation = options[4]
+var = options[5]
+values = options[6]
 
 # run for every var/values pair, array with file names
 files = []
 for option in var:
-    files.append(generateTimeSeries(start, end, option, values[var.index(option)], delimiter, maxSeconds, data))
+    files.append(generateTimeSeries(start, end, option, values[var.index(option)], delimiter, maxSeconds, cumulation, data))
 random = id_generator()
 # after run, delete temp and columns files
 for f in files:
@@ -57,6 +58,14 @@ os.remove('columns.csv')
 now = datetime.datetime.today()
 fileName = now.strftime("%Y-%m-%d %H.%M.%S.csv")
 os.rename(random+'merged.csv', fileName)
+
+if not cumulation == 1:
+    try:
+        os.rename(cumulateTo(cumulation, fileName), "cumulated_"+fileName)
+        os.remove(fileName)
+        os.rename("cumulated_"+fileName, fileName)
+    except:
+        sys.exit('Error: Cumulation failed.')
 
 stopTime = timeit.default_timer()
 scriptTime = stopTime - startTime

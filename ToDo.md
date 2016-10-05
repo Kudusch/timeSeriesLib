@@ -7,4 +7,5 @@
 - ~~Verbose mode~~
 - ~~Error handling~~
 - ~~git~~
+- File closing in timeSeries.py
 - Tests on windows, Linux other Macs

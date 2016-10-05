@@ -14,6 +14,7 @@ The options file must contain the following parameters:
 - End: The variable containing the end of the case
 - Delimiter: The delimieter used for input and output csv
 - Duration: The length of the time series in seconds
+- Cumulate to: Either *None* or the number of seconds to cumulate
 
 … and one or more of the following parameters:
 
