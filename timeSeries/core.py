@@ -35,11 +35,15 @@ def generateTimeSeries(start, end, var, values, delimiter, maxSeconds, cumulatio
 
         now = datetime.datetime.today()
         fileName = var+"_"+now.strftime("%Y-%m-%d %H.%M.%S.csv")
-        writer = csv.writer(open(fileName, 'w'), delimiter=delimiter)
-        columns = csv.writer(open('columns.csv', 'w'), delimiter=delimiter) if not os.path.isfile('columns.csv') else False
+        writerFile = open(fileName, 'w')
+        writer = csv.writer(writerFile, delimiter=delimiter)
+        if not os.path.isfile('columns.csv'):
+            columnsFile = open('columns.csv', 'w')
+            columns = csv.writer(columnsFile, delimiter=delimiter)
+        else:
+            False
         try:
             columns.writerow(["Second", "Timestamp"])
-            # columns.writerow(["Second", "Timestamp", "Minute"])
         except:
             pass
         header = []
@@ -52,10 +56,13 @@ def generateTimeSeries(start, end, var, values, delimiter, maxSeconds, cumulatio
             writer.writerow(row)
             try:
                 columns.writerow([second, secondsToStamp(second)])
-                # columns.writerow([second, secondsToStamp(second), second/60])
             except:
                 pass
-        
+        writerFile.close()
+        try:
+            columnsFile.close()
+        except:
+            pass
         return fileName
     finally:
         f.close()

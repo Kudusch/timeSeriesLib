@@ -36,15 +36,21 @@ for option in var:
     files.append(generateTimeSeries(start, end, option, values[var.index(option)], delimiter, maxSeconds, cumulation, data))
 random = id_generator()
 # after run, delete temp and columns files
+
 for f in files:
-    current = csv.reader(open(f, 'r', ), delimiter=delimiter)
+    currentFile = open(f, 'r')
+    current = csv.reader(currentFile, delimiter=delimiter)
     # on first var/values pair merge with columns, then with temp.csv
     if files.index(f) > 0:
-        writer = csv.writer(open(random+'temp.csv', 'w'), delimiter=delimiter)
-        reader = csv.reader(open(random+'merged.csv', 'r'), delimiter=delimiter)
+        writerFile = open(random+'temp.csv', 'w')
+        readerFile = open(random+'merged.csv', 'r')
+        writer = csv.writer(writerFile, delimiter=delimiter)
+        reader = csv.reader(readerFile, delimiter=delimiter)
     else:
-        writer = csv.writer(open(random+'merged.csv', 'w'), delimiter=delimiter)
-        reader = csv.reader(open('columns.csv', 'r'), delimiter=delimiter)
+        writerFile = open(random+'merged.csv', 'w')
+        readerFile = open('columns.csv', 'r')
+        writer = csv.writer(writerFile, delimiter=delimiter)
+        reader = csv.reader(readerFile, delimiter=delimiter)
     for row in current:
         next = reader.next()
         next.extend(row)
@@ -53,6 +59,9 @@ for f in files:
         os.rename(random+'temp.csv', random+'merged.csv')
     except:
         pass
+    currentFile.close()
+    writerFile.close()
+    readerFile.close()
     os.remove(f)
 os.remove('columns.csv')
 now = datetime.datetime.today()
