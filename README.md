@@ -6,7 +6,7 @@ This tool converts case based .csv data to data more fitting for time series ana
 
 `python timeSeries/timeSeries.py [OPTIONS] [YOUR DATA].csv`
 
-The data must be a csv-file, with either `,`or `;` as delimiter.
+The data must be a csv-file, with either `,` or `;` as delimiter.
 
 The options file must contain the following parameters:
 
