@@ -8,8 +8,9 @@ import csv
 def stampToSeconds(stamp):
     stamp = stamp.split(':')
     out = 0
-    for n in stamp:
-        out += int(n) * (60**list(reversed(stamp)).index(n))
+    out += int(stamp[0])*60*60
+    out += int(stamp[1])*60
+    out += int(stamp[2])
     return out
     
 def secondsToStamp(seconds):
