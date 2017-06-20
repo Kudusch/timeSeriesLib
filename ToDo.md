@@ -8,4 +8,6 @@
 - ~~Error handling~~
 - ~~git~~
 - ~~File closing in timeSeries.py~~
+- Fix counting bug
+	- aggregation is off
 - Tests on windows, Linux other Macs
