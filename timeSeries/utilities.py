@@ -85,8 +85,8 @@ def validateOptions(options):
                cumulation = 1
             else:
                cumulation = int(cumulation)
-            var = re.findall(re.compile(ur'^Variable: (\S*)$', re.MULTILINE) , raw)
-            values = re.findall(re.compile(ur'^Values: (\S*)$', re.MULTILINE) , raw)
+            var = re.findall(re.compile(ur'^Variable:\s(.*)$', re.MULTILINE) , raw)
+            values = re.findall(re.compile(ur'^Values:\s(.*)$', re.MULTILINE) , raw)
             for x in [start, end, delimiter, maxSeconds, cumulation, var, values]:
                 if x == "" or x == [] :
                     return False
