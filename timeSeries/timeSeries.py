@@ -1,14 +1,14 @@
 #!/usr/bin/python
 
-from mode1 import *
+from core import *
 
 # output timer
 startTime = timeit.default_timer()
 
-print([sys.argv[1], sys.argv[2], sys.argv[3]])
-
 if (sys.argv[1] == "-1"):
     fileName = mode1(sys.argv[2], sys.argv[3])
+elif (sys.argv[1] == "-1"):
+    fileName = mode2(sys.argv[2], sys.argv[3])
 
 
 stopTime = timeit.default_timer()
