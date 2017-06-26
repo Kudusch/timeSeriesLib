@@ -38,7 +38,7 @@ def cumulateTo(unit, data):
         delimiter = dialect.delimiter
         f.seek(0)
         reader = csv.reader(f, delimiter=delimiter)
-        header = reader.next();
+        header = reader.next()
         readerLength = sum(1 for row in reader)
     with open(data, 'r') as f:
         sniffer = csv.Sniffer()
@@ -46,7 +46,7 @@ def cumulateTo(unit, data):
         delimiter = dialect.delimiter
         f.seek(0)
         reader = csv.reader(f, delimiter=delimiter)
-        header = reader.next();
+        header = reader.next()
         unitCumulation = [0] * len(header)
         cumulated = []
         random = id_generator()
@@ -91,5 +91,28 @@ def validateOptions(options):
                 if x == "" or x == [] :
                     return False
             return [start, end, delimiter, maxSeconds, cumulation, var, values]
+    except:
+        return False
+    
+def validateOptions2(options):
+    try:
+        with open(options, 'r') as raw:
+            raw = raw.read()
+            delimiter = re.findall(re.compile(ur'^Delimiter: (\S*)$', re.MULTILINE) , raw)[0]
+            maxSeconds = int(re.findall(re.compile(ur'^Duration: (\S*)$', re.MULTILINE), raw)[0])
+            cumulation = re.findall(re.compile(ur'^Cumulate to: (\S*)$', re.MULTILINE) , raw)[0]
+            if cumulation == "None":
+               cumulation = 1
+            else:
+               cumulation = int(cumulation)
+            values = re.findall(re.compile(ur'^Values:\s(.*)$', re.MULTILINE) , raw)
+            try:
+                values = values[0].split(',')
+            except:
+                return False
+            for x in [delimiter, maxSeconds, cumulation, values]:
+                if x == "" or x == [] :
+                    return False
+            return [delimiter, maxSeconds, cumulation, values]
     except:
         return False

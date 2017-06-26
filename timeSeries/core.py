@@ -17,7 +17,7 @@ def generateTimeSeries(start, end, var, values, delimiter, maxSeconds, cumulatio
             sys.exit('Error: Data file uses different delimiter than the one set in options.')
         f.seek(0)
         reader = csv.reader(f, delimiter=delimiter)
-        header = reader.next();
+        header = reader.next()
 
         values = values.split(',')
         timeSeries = dict((i, []) for i in range(maxSeconds+1))
@@ -139,6 +139,57 @@ def mode1(options, data):
     return fileName 
 
 def mode2(options, data):
+    # read options, handle errors
+    try:
+        options = validateOptions2(options)
+        if (options == False):
+            sys.exit('Error: Options are in wrong format.')   
+    except:
+        sys.exit('Error: Options not found.')
+    try:
+        if not (os.path.isfile(data)):
+            sys.exit('Error: No data found.')    
+    except:
+        sys.exit('Error: Data not found.')
     
-    return fileName
-    
+    delimiter = options[0]
+    maxSeconds = options[1]
+    cumulation = options[2]
+    values = options[3]
+        
+    f = open(data, 'r', )
+    try:
+        sniffer = csv.Sniffer()
+        dialect = sniffer.sniff(f.read())
+        if not (dialect.delimiter == delimiter):
+            sys.exit('Error: Data file uses different delimiter than the one set in options.')
+        f.seek(0)
+        reader = csv.reader(f, delimiter=delimiter)
+        header = reader.next()
+        timeSeriesHeader = ["Second", "Timestamp"]
+        for value in values:
+            timeSeriesHeader.append(str(value))
+        headerLen = len(timeSeriesHeader)
+        timeSeries = []
+        timeSeries.append(timeSeriesHeader)
+        for row in range(len(header)):
+            timeSeriesRow = [0] * headerLen
+            timeSeriesRow[0] = row
+            timeSeriesRow[1] = secondsToStamp(row)
+            timeSeries.append(timeSeriesRow)
+        for row in reader:
+            for index, item in enumerate(row):
+                timeSeries[index+1][timeSeriesHeader.index(str(item))] = timeSeries[index+1][timeSeriesHeader.index(str(item))] + 1
+    finally:
+        f.close()
+        
+    now = datetime.datetime.today()
+    fileName = now.strftime("%Y-%m-%d %H.%M.%S.csv")
+    f = open(fileName, 'w')
+    try:
+        writer = csv.writer(f, delimiter=delimiter)
+        for row in timeSeries:
+            writer.writerow(row)
+        return fileName
+    finally:
+        f.close()
