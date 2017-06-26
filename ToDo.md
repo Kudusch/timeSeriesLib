@@ -11,3 +11,5 @@
 - ~~Fix counting bug~~
 - Add unit tests
 - Tests on windows, Linux other Macs
+- Add examples for mode 2
+- Add cumulation to mode 2
