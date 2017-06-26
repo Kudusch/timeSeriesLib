@@ -1,8 +1,9 @@
 #!/usr/bin/python
 
 from utilities import *
-import csv
 import datetime
+import csv
+import timeit
 import os
 import sys
 
@@ -16,7 +17,7 @@ def generateTimeSeries(start, end, var, values, delimiter, maxSeconds, cumulatio
             sys.exit('Error: Data file uses different delimiter than the one set in options.')
         f.seek(0)
         reader = csv.reader(f, delimiter=delimiter)
-        header = reader.next();
+        header = reader.next()
 
         values = values.split(',')
         timeSeries = dict((i, []) for i in range(maxSeconds+1))
@@ -63,6 +64,132 @@ def generateTimeSeries(start, end, var, values, delimiter, maxSeconds, cumulatio
             columnsFile.close()
         except:
             pass
+        return fileName
+    finally:
+        f.close()
+
+def mode1(options, data):
+    # read options, handle errors
+    try:
+        options = validateOptions(options)
+        if (options == False):
+            sys.exit('Error: Options are in wrong format.')   
+    except:
+        sys.exit('Error: Options not found.')
+    try:
+        if not (os.path.isfile(data)):
+            sys.exit('Error: No data found.')    
+    except:
+        sys.exit('Error: Data not found.')
+
+    start = options[0]
+    end = options[1]
+    delimiter = options[2]
+    maxSeconds = options[3]
+    cumulation = options[4]
+    var = options[5]
+    values = options[6]
+
+    # run for every var/values pair, array with file names
+    files = []
+    for option in var:
+        files.append(generateTimeSeries(start, end, option, values[var.index(option)], delimiter, maxSeconds, cumulation, data))
+    random = id_generator()
+    # after run, delete temp and columns files
+
+    for f in files:
+        currentFile = open(f, 'r')
+        current = csv.reader(currentFile, delimiter=delimiter)
+        # on first var/values pair merge with columns, then with temp.csv
+        if files.index(f) > 0:
+            writerFile = open(random+'temp.csv', 'w')
+            readerFile = open(random+'merged.csv', 'r')
+            writer = csv.writer(writerFile, delimiter=delimiter)
+            reader = csv.reader(readerFile, delimiter=delimiter)
+        else:
+            writerFile = open(random+'merged.csv', 'w')
+            readerFile = open('columns.csv', 'r')
+            writer = csv.writer(writerFile, delimiter=delimiter)
+            reader = csv.reader(readerFile, delimiter=delimiter)
+        for row in current:
+            next = reader.next()
+            next.extend(row)
+            writer.writerow(next)
+        try:
+            os.rename(random+'temp.csv', random+'merged.csv')
+        except:
+            pass
+        currentFile.close()
+        writerFile.close()
+        readerFile.close()
+        os.remove(f)
+    os.remove('columns.csv')
+    now = datetime.datetime.today()
+    fileName = now.strftime("%Y-%m-%d %H.%M.%S.csv")
+    os.rename(random+'merged.csv', fileName)
+
+    if not cumulation == 1:
+        try:
+            os.rename(cumulateTo(cumulation, fileName), "cumulated_"+fileName)
+            os.remove(fileName)
+            os.rename("cumulated_"+fileName, fileName)
+        except:
+            sys.exit('Error: Cumulation failed.')
+            
+    return fileName 
+
+def mode2(options, data):
+    # read options, handle errors
+    try:
+        options = validateOptions2(options)
+        if (options == False):
+            sys.exit('Error: Options are in wrong format.')   
+    except:
+        sys.exit('Error: Options not found.')
+    try:
+        if not (os.path.isfile(data)):
+            sys.exit('Error: No data found.')    
+    except:
+        sys.exit('Error: Data not found.')
+    
+    delimiter = options[0]
+    maxSeconds = options[1]
+    cumulation = options[2]
+    values = options[3]
+        
+    f = open(data, 'r', )
+    try:
+        sniffer = csv.Sniffer()
+        dialect = sniffer.sniff(f.read())
+        if not (dialect.delimiter == delimiter):
+            sys.exit('Error: Data file uses different delimiter than the one set in options.')
+        f.seek(0)
+        reader = csv.reader(f, delimiter=delimiter)
+        header = reader.next()
+        timeSeriesHeader = ["Second", "Timestamp"]
+        for value in values:
+            timeSeriesHeader.append(str(value))
+        headerLen = len(timeSeriesHeader)
+        timeSeries = []
+        timeSeries.append(timeSeriesHeader)
+        for row in range(len(header)):
+            timeSeriesRow = [0] * headerLen
+            timeSeriesRow[0] = row
+            timeSeriesRow[1] = secondsToStamp(row)
+            timeSeries.append(timeSeriesRow)
+        for row in reader:
+            for index, item in enumerate(row):
+                timeSeries[index+1][timeSeriesHeader.index(str(item))] = timeSeries[index+1][timeSeriesHeader.index(str(item))] + 1
+    finally:
+        f.close()
+        
+    now = datetime.datetime.today()
+    fileName = now.strftime("%Y-%m-%d %H.%M.%S.csv")
+    f = open(fileName, 'w')
+    try:
+        writer = csv.writer(f, delimiter=delimiter)
+        for row in timeSeries:
+            writer.writerow(row)
         return fileName
     finally:
         f.close()
