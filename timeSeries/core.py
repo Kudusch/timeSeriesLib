@@ -48,7 +48,7 @@ def generateTimeSeries(start, end, var, values, delimiter, maxSeconds, cumulatio
         except:
             pass
         header = []
-        header.extend([(var + ":" + x) for x in values])
+        header.extend([(var + "_" + x) for x in values])
         writer.writerow(header)
 
         for second, value in timeSeries.items():
