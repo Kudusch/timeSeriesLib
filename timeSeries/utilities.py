@@ -67,7 +67,7 @@ def cumulateTo(unit, data):
             writer = csv.writer(write, delimiter=delimiter)
             for n in range(0,2):
                 header.pop(0)
-            header = ["Cumulation Unit:"+str(unit)] + header
+            header = ["Cumulation Unit_"+str(unit)] + header
             writer.writerow(header)
             writer.writerows(cumulated)
         return random+'_cumulated.csv'
