@@ -13,3 +13,8 @@
 - Tests on windows, Linux other Macs
 - Add examples for mode 2
 - Add cumulation to mode 2
+
+# To do: timeSeriesLib.R
+
+- write R packet
+- publish to CRAN
